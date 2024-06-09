@@ -55,6 +55,8 @@ def t_IDENTIFICADOR(t):
         t.type = 'ENTRADA'
     elif t.value == 'ALEATORIO':
         t.type = 'ALEATORIO'
+    elif t.value == 'FUNCAO':
+        t.type = 'FUNCAO'
     return t
 
 # Expressão regular que reconhece números inteiros.
