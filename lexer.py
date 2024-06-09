@@ -13,7 +13,8 @@ import ply.lex as lex
 tokens = (
     'IDENTIFICADOR', 'NUMERO', 'OPERADOR_ARITMETICO', 'ATRIBUICAO',
     'PARENTESES_ESQ', 'PARENTESES_DIR', 'PONTO_E_VIRGULA',
-    'ESCREVER', 'STRING', 'CONCATENACAO', 'FUNCAO', 'FIM'
+    'ESCREVER', 'STRING', 'CONCATENACAO', 'INTERPOLATED_STRING',
+    'ENTRADA', 'ALEATORIO', 'FUNCAO', 'FIM'
 )
 
 t_OPERADOR_ARITMETICO = r'\+|\-|\*|\/'
@@ -25,6 +26,7 @@ t_CONCATENACAO = r'\<\>'
 t_ESCREVER = r'escrever'
 t_FUNCAO = r'funcao'
 t_FIM = r'fim'
+t_ESCREVER = r'escrever' 
 
 
 

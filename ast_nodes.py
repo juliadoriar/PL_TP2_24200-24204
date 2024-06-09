@@ -4,6 +4,8 @@ from lexer import tokens
 # Definição dos nós da AST (Abstract Syntax Tree) para representar a estrutura do programa fonte.
 # A AST é uma representação hierárquica do código fonte que captura sua estrutura sintática de forma mais compacta e manipulável.
 
+class ExpressionNode:
+    pass
 class ProgramNode:
     def __init__(self, statements):
         # O nó ProgramNode representa o programa como um todo.
@@ -76,14 +78,15 @@ class ConcatNode:
 class StringNode:
     def __init__(self, value):
         self.value = value
+        
+class EntradaNode(ExpressionNode):
+    def __init__(self):
+        pass
 
-class FunctionNode:
-    def __init__(self, name, params, body):
-        self.name = name
-        self.params = params
-        self.body = body
-
-class FunctionCallNode:
-    def __init__(self, name, args):
-        self.name = name
-        self.args = args
+class AleatorioNode(ExpressionNode):
+    def __init__(self, expression):
+        self.expression = expression
+        
+class InterpolatedStringNode(ExpressionNode):
+    def __init__(self, value):
+        self.value = value

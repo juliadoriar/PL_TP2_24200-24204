@@ -32,7 +32,7 @@ def interpret_line(line, parser):
         result = parser.parse(line)
         
         # Evaluate the resulting AST
-        eval_statement(result)
+        eval_program(result)
     except Exception as e:
         print(f"Erro ao processar a entrada: {e}")   
 
@@ -70,6 +70,12 @@ def eval_expression(node):
     elif isinstance(node, AleatoryNode):
         max_value = eval_expression(node.expression)
         return random.randint(0, max_value)  # Gera um número aleatório entre 0 e o valor máximo
+    elif isinstance(node, EntradaNode):
+        return int(input("Digite um número: "))
+    else:
+        raise ValueError(f"Interpreter error: Invalid expression node: {node}")
+    
+
     elif isinstance(node, FunctionCallNode):
         return eval_function_call(node)
 
