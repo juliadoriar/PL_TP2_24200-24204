@@ -1,0 +1,32 @@
+Tokens gerados:
+LexToken(OPERADOR_ARITMETICO,'-',1,1)
+LexToken(IDENTIFICADOR,'exemplo',1,3)
+LexToken(IDENTIFICADOR,'interpola',1,11)
+LexToken(IDENTIFICADOR,'o',1,24)
+LexToken(IDENTIFICADOR,'de',1,26)
+LexToken(IDENTIFICADOR,'strings',1,29)
+LexToken(IDENTIFICADOR,'Ol',2,40)
+LexToken(IDENTIFICADOR,'EST',2,46)
+LexToken(IDENTIFICADOR,'IPCA!',2,50)
+LexToken(OPERADOR_ARITMETICO,'-',2,56)
+LexToken(IDENTIFICADOR,'escola',3,59)
+LexToken(ATRIBUICAO,'=',3,66)
+LexToken(STRING,'EST',3,67)
+LexToken(PONTO_E_VIRGULA,';',3,72)
+LexToken(IDENTIFICADOR,'inst',4,74)
+LexToken(ATRIBUICAO,'=',4,79)
+LexToken(STRING,'IPCA',4,81)
+LexToken(PONTO_E_VIRGULA,';',4,87)
+LexToken(ESCREVER,'ESCREVER',5,89)
+LexToken(PARENTESES_ESQ,'(',5,98)
+LexToken(INTERPOLATED_STRING,'OlÃ¡, #{escola} #{inst}!',5,99)
+LexToken(PARENTESES_DIR,')',5,125)
+LexToken(PONTO_E_VIRGULA,';',5,126)
+
+Nós da árvore sintática:
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x00000238BD62FF50>, <ast_nodes.StringNode object at 0x00000238BD62FEC0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x00000238BD62FF80>, <ast_nodes.StringNode object at 0x00000238BD62FEF0>)
+<ast_nodes.WriteNode object at 0x00000238BD62FFE0>
+
+Resultado da última operação:
+OlÃ¡, EST IPCA!
