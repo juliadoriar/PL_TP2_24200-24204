@@ -3,7 +3,8 @@ from lexer import tokens
 
 # Definição dos nós da AST (Abstract Syntax Tree) para representar a estrutura do programa fonte.
 # A AST é uma representação hierárquica do código fonte que captura sua estrutura sintática de forma mais compacta e manipulável.
-
+# Cada nó da AST representa uma construção sintática do programa, como uma declaração, uma expressão ou uma instrução.
+# Os nós serão utilizados pelo parser para construir a árvore sintática do programa e pelo interpretador para executar o programa.
 class ExpressionNode:
     pass
 class ProgramNode:
@@ -76,28 +77,40 @@ class ConcatNode:
         self.right = right
 
 class StringNode:
+    # O nó StringNode representa uma string, ou seja, uma sequência de caracteres.
+    # Ele armazena o valor da string.
     def __init__(self, value):
         self.value = value
         
 class EntradaNode(ExpressionNode):
+    # O nó EntradaNode representa uma instrução de entrada, onde o usuário fornece um valor para uma variável.
+    # Ele não armazena nenhum valor, pois a entrada é tratada externamente ao interpretar o programa.
     def __init__(self):
         pass
 
 class AleatorioNode(ExpressionNode):
+    # O nó AleatorioNode representa uma expressão que gera um número aleatório entre 0 e um valor máximo.
+    # Ele armazena a expressão que determina o valor máximo para a geração do número aleatório.
     def __init__(self, expression):
         self.expression = expression
         
 class InterpolatedStringNode(ExpressionNode):
+    # O nó InterpolatedStringNode representa uma string interpolada, que contém expressões embutidas.
+    # Ele armazena uma lista de partes da string, que podem ser strings simples ou expressões.
     def __init__(self, value):
         self.value = value
 
 class FunctionNode:
+    # O nó FunctionNode representa uma declaração de função, que define uma função no programa.
+    # Ele armazena o nome da função, os parâmetros da função e o corpo da função.
     def __init__(self, name, params, body):
         self.name = name
         self.params = params
         self.body = body
 
 class FunctionCallNode:
+    # O nó FunctionCallNode representa uma chamada de função, onde uma função é invocada com argumentos.
+    # Ele armazena o nome da função e os argumentos passados para a função.
     def __init__(self, name, args):
         self.name = name
         self.args = args
