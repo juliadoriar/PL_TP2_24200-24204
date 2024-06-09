@@ -14,7 +14,7 @@ tokens = (
     'IDENTIFICADOR', 'NUMERO', 'OPERADOR_ARITMETICO', 'ATRIBUICAO',
     'PARENTESES_ESQ', 'PARENTESES_DIR', 'PONTO_E_VIRGULA',
     'ESCREVER', 'STRING', 'CONCATENACAO', 'INTERPOLATED_STRING',
-    'ENTRADA', 'ALEATORIO'
+    'ENTRADA', 'ALEATORIO', 'COMMA', 'COLON', 'FUNCAO', 'FIM'
 )
 
 t_OPERADOR_ARITMETICO = r'\+|\-|\*|\/'
@@ -24,6 +24,10 @@ t_PARENTESES_DIR = r'\)'
 t_PONTO_E_VIRGULA = r';'
 t_CONCATENACAO = r'\<\>'
 t_ESCREVER = r'escrever' 
+t_COMMA = r','
+t_COLON = r':'
+t_FUNCAO = r'funcao'
+t_FIM = r'fim'
 
 
 
