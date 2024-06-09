@@ -90,3 +90,14 @@ class AleatorioNode(ExpressionNode):
 class InterpolatedStringNode(ExpressionNode):
     def __init__(self, value):
         self.value = value
+
+class FunctionNode:
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params
+        self.body = body
+
+class FunctionCallNode:
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
