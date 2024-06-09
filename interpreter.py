@@ -83,28 +83,25 @@ def eval_function_call(node):
     if not function:
         raise ValueError(f"Função {node.name} não definida")
     
-    # Cria um novo escopo para as variáveis locais da função
-    local_variables = {}
-    
-    # Mapeia argumentos para parâmetros
-    for param, arg in zip(function.params, node.args):
-        local_variables[param.name] = eval_expression(arg)
-    
-    # Salva o estado atual das variáveis globais
-    global_variables_backup = variables.copy()
-    
-    # Substitui as variáveis globais com as variáveis locais da função
-    variables.update(local_variables)
-    
-    # Executa o corpo da função
+    # Salva o contexto atual das variáveis
+    saved_variables = variables.copy()
+
+    # Define os parâmetros da função
+    if len(function.parameters) != len(node.arguments):
+        raise ValueError(f"Interpreter error: Function '{node.name}' expected {len(function.parameters)} arguments, got {len(node.arguments)}")
+
+    for param, arg in zip(function.parameters, node.arguments):
+        variables[param.name] = eval_expression(arg)
+
+    # Avalia o corpo da função
     result = None
-    for statement in function.body:
-        result = eval_statement(statement)
-    
-    # Restaura as variáveis globais
-    variables.clear()
-    variables.update(global_variables_backup)
-    
+    for stmt in function.body:
+        result = eval_statement(stmt)
+
+    # Restaura o contexto original das variáveis
+    global variables
+    variables = saved_variables
+
     return result
     
 def interpret(ast):

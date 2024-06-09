@@ -6,6 +6,8 @@ from ast_nodes import *
 # Cada função p_XXX() corresponde a uma regra de produção
 
 
+functions = {} # Dicionário para armazenar funções
+
 # Definição da gramática usando regras de produção
 def p_program(p):
     'program : statement_list'
@@ -28,24 +30,36 @@ def p_statement_write(p):
     p[0] = WriteNode(p[3])
 
 def p_statement_function(p):
-    '''statement : FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
-                 | FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM'''
+    '''statement : FUNCAO IDENTIFICADOR PARENTESES_ESQ parameters PARENTESES_DIR COLON statement_list FIM PONTO_E_VIRGULA
+                 | FUNCAO IDENTIFICADOR PARENTESES_ESQ parameters PARENTESES_DIR COLON expression PONTO_E_VIRGULA
+                 | FUNCAO IDENTIFICADOR PARENTESES_ESQ parameters PARENTESES_DIR COMMA COLON expression PONTO_E_VIRGULA'''
+    if len(p) == 10:
+        p[0] = FunctionNode(p[2], p[4], [p[8]])
+    elif len(p) == 11:
+        p[0] = FunctionNode(p[2], p[4], [p[9]])
+    else:
+        p[0] = FunctionNode(p[2], p[4], p[7])
     if len(p) == 9:
         p[0] = FunctionNode(p[2], p[4], [p[7]])
     else:
         p[0] = FunctionNode(p[2], p[4], p[7])
     functions[p[2]] = p[0]
 
-def p_param_list(p):
-    '''param_list : param_list COMMA IDENTIFICADOR
+def p_parameters(p):
+    '''parameters : parameters COMMA IDENTIFICADOR
                   | IDENTIFICADOR
                   | empty'''
-    if len(p) == 4:
-        p[0] = p[1] + [p[3]]
-    elif len(p) == 2 and p[1] is not None:
-        p[0] = [p[1]]
+    if len(p) == 2:
+        if p[1] is None:
+            p[0] = []
+        else:
+            p[0] = [IdentifierNode(p[1])]
     else:
-        p[0] = []
+        p[0] = p[1] + [IdentifierNode(p[3])]
+
+def p_statement_call(p):
+    'statement : IDENTIFICADOR PARENTESES_ESQ arguments PARENTESES_DIR PONTO_E_VIRGULA'
+    p[0] = FunctionCallNode(p[1], p[3])
 
 def p_expression(p):
     '''
@@ -109,10 +123,6 @@ def parse_interpolated_string(s):
 #         p[0] = p[1]
 #     else:
 #         p[0] = BinaryOperationNode(p[2], p[1], p[3])
-
-def p_function_call(p):
-    '''function_call : IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR'''
-    p[0] = FunctionCallNode(p[1], p[3])
 
 def p_arg_list(p):
     '''arg_list : arg_list COMMA expression
