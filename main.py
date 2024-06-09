@@ -1,8 +1,8 @@
 from lexer import lexer
 from parser_1 import parser
 from interpreter import interpret, interpret_line
-import sys
-import os
+import sys # Importa o módulo sys para acessar os argumentos da linha de comando
+import os # Importa o módulo os para manipulação de arquivos e pastas
 
 def main():
     if len(sys.argv) > 1:  # Se um arquivo de entrada foi fornecido como argumento
@@ -49,20 +49,22 @@ def main():
                 output_file.write(str(result))
 
             print(f"Resultado da última operação foi salvo em '{output_filename}'.")
-
+        ## Trata exceções
+        # FileNotFoundError é lançado quando o arquivo de entrada não é encontrado    
         except FileNotFoundError:
             print(f"Arquivo '{input_filename}' não encontrado.")
+        # Exception é lançada para outros erros
         except Exception as e:
             print(f"Erro ao processar o arquivo: {e}")
     else:  # Modo interativo
         print("Modo Interativo. Digite suas instruções:")
         while True:
             try:
-                line = input('>>> ')
-                if line.lower() in ['exit', 'quit']:
+                line = input('>>> ') # Lê a entrada do usuário
+                if line.lower() in ['exit', 'quit']: # Se o usuário digitar 'exit' ou 'quit', sai do modo interativo
                     break
-                interpret_line(line, parser)
-            except Exception as e:
+                interpret_line(line, parser) # Interpreta a linha de entrada usando o parser definido anteriormente
+            except Exception as e: # Trata exceções
                 print(f"Erro ao processar a entrada: {e}")
 
 if __name__ == "__main__":

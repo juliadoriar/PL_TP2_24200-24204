@@ -29,10 +29,10 @@ LexToken(NUMERO,3,4,80)
 LexToken(PONTO_E_VIRGULA,';',4,82)
 
 Nós da árvore sintática:
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001FF7BDCBD10>, <ast_nodes.BinaryOperationNode object at 0x000001FF7BDCBE60>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001FF7BDCBD40>, <ast_nodes.BinaryOperationNode object at 0x000001FF7BDE8080>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001FF7BDE8170>, <ast_nodes.NumberNode object at 0x000001FF7BDCBF80>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001FF7BDCBDA0>, <ast_nodes.BinaryOperationNode object at 0x000001FF7BDE82C0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000002283C018620>, <ast_nodes.BinaryOperationNode object at 0x000002283C018770>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000002283C018920>, <ast_nodes.BinaryOperationNode object at 0x000002283C018950>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000002283C018650>, <ast_nodes.NumberNode object at 0x000002283C018890>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000002283C018B00>, <ast_nodes.BinaryOperationNode object at 0x000002283C018B90>)
 
 Resultado da última operação:
 -196560
