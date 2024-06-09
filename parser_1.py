@@ -125,13 +125,6 @@ def p_arg_list(p):
     else:
         p[0] = []
 
-def p_term(p):
-    '''term : term OPERADOR_ARITMETICO factor
-            | factor'''
-    if len(p) == 2:
-        p[0] = p[1]
-    else:
-        p[0] = BinaryOperationNode(p[2], p[1], p[3])
 
 # def p_factor(p):
 #     '''factor : PARENTESES_ESQ expression PARENTESES_DIR

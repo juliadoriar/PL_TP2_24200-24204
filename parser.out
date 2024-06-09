@@ -1,12 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    COLON
-    COMMA
-    FIM
-    FUNCAO
-
 Grammar
 
 Rule 0     S' -> program
@@ -15,43 +8,58 @@ Rule 2     statement_list -> statement_list statement
 Rule 3     statement_list -> statement
 Rule 4     statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA
 Rule 5     statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
-Rule 6     expression -> IDENTIFICADOR
-Rule 7     expression -> NUMERO
-Rule 8     expression -> STRING
-Rule 9     expression -> INTERPOLATED_STRING
-Rule 10    expression -> expression OPERADOR_ARITMETICO expression
-Rule 11    expression -> expression CONCATENACAO expression
-Rule 12    expression -> PARENTESES_ESQ expression PARENTESES_DIR
-Rule 13    expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR
-Rule 14    expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+Rule 6     statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+Rule 7     statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
+Rule 8     param_list -> param_list COMMA IDENTIFICADOR
+Rule 9     param_list -> IDENTIFICADOR
+Rule 10    param_list -> empty
+Rule 11    expression -> IDENTIFICADOR
+Rule 12    expression -> NUMERO
+Rule 13    expression -> STRING
+Rule 14    expression -> INTERPOLATED_STRING
+Rule 15    expression -> expression OPERADOR_ARITMETICO expression
+Rule 16    expression -> expression CONCATENACAO expression
+Rule 17    expression -> PARENTESES_ESQ expression PARENTESES_DIR
+Rule 18    expression -> function_call
+Rule 19    expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR
+Rule 20    expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+Rule 21    function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
+Rule 22    arg_list -> arg_list COMMA expression
+Rule 23    arg_list -> expression
+Rule 24    arg_list -> empty
+Rule 25    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ALEATORIO            : 14
+ALEATORIO            : 20
 ATRIBUICAO           : 4
-COLON                : 
-COMMA                : 
-CONCATENACAO         : 11
-ENTRADA              : 13
+COLON                : 6 7
+COMMA                : 8 22
+CONCATENACAO         : 16
+ENTRADA              : 19
 ESCREVER             : 5
-FIM                  : 
-FUNCAO               : 
-IDENTIFICADOR        : 4 6
-INTERPOLATED_STRING  : 9
-NUMERO               : 7
-OPERADOR_ARITMETICO  : 10
-PARENTESES_DIR       : 5 12 13 14
-PARENTESES_ESQ       : 5 12 13 14
+FIM                  : 6 7
+FUNCAO               : 6 7
+IDENTIFICADOR        : 4 6 7 8 9 11 21
+INTERPOLATED_STRING  : 14
+NUMERO               : 12
+OPERADOR_ARITMETICO  : 15
+PARENTESES_DIR       : 5 6 7 17 19 20 21
+PARENTESES_ESQ       : 5 6 7 17 19 20 21
 PONTO_E_VIRGULA      : 4 5
-STRING               : 8
+STRING               : 13
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 4 5 10 10 11 11 12 14
+arg_list             : 21 22
+empty                : 10 24
+expression           : 4 5 15 15 16 16 17 20 22 23
+function_call        : 18
+param_list           : 6 7 8
 program              : 0
-statement            : 2 3
-statement_list       : 1 2
+statement            : 2 3 6
+statement_list       : 1 2 7
 
 Parsing method: LALR
 
@@ -63,9 +71,12 @@ state 0
     (3) statement_list -> . statement
     (4) statement -> . IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA
     (5) statement -> . ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
+    (6) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
 
     IDENTIFICADOR   shift and go to state 4
     ESCREVER        shift and go to state 5
+    FUNCAO          shift and go to state 6
 
     program                        shift and go to state 1
     statement_list                 shift and go to state 2
@@ -83,12 +94,15 @@ state 2
     (2) statement_list -> statement_list . statement
     (4) statement -> . IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA
     (5) statement -> . ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
+    (6) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
 
     $end            reduce using rule 1 (program -> statement_list .)
     IDENTIFICADOR   shift and go to state 4
     ESCREVER        shift and go to state 5
+    FUNCAO          shift and go to state 6
 
-    statement                      shift and go to state 6
+    statement                      shift and go to state 7
 
 state 3
 
@@ -96,6 +110,7 @@ state 3
 
     IDENTIFICADOR   reduce using rule 3 (statement_list -> statement .)
     ESCREVER        reduce using rule 3 (statement_list -> statement .)
+    FUNCAO          reduce using rule 3 (statement_list -> statement .)
     $end            reduce using rule 3 (statement_list -> statement .)
 
 
@@ -103,360 +118,670 @@ state 4
 
     (4) statement -> IDENTIFICADOR . ATRIBUICAO expression PONTO_E_VIRGULA
 
-    ATRIBUICAO      shift and go to state 7
+    ATRIBUICAO      shift and go to state 8
 
 
 state 5
 
     (5) statement -> ESCREVER . PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
 
-    PARENTESES_ESQ  shift and go to state 8
+    PARENTESES_ESQ  shift and go to state 9
 
 
 state 6
+
+    (6) statement -> FUNCAO . IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> FUNCAO . IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
+
+    IDENTIFICADOR   shift and go to state 10
+
+
+state 7
 
     (2) statement_list -> statement_list statement .
 
     IDENTIFICADOR   reduce using rule 2 (statement_list -> statement_list statement .)
     ESCREVER        reduce using rule 2 (statement_list -> statement_list statement .)
+    FUNCAO          reduce using rule 2 (statement_list -> statement_list statement .)
     $end            reduce using rule 2 (statement_list -> statement_list statement .)
+    FIM             reduce using rule 2 (statement_list -> statement_list statement .)
 
-
-state 7
-
-    (4) statement -> IDENTIFICADOR ATRIBUICAO . expression PONTO_E_VIRGULA
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
-
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
-
-    expression                     shift and go to state 10
 
 state 8
 
-    (5) statement -> ESCREVER PARENTESES_ESQ . expression PARENTESES_DIR PONTO_E_VIRGULA
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (4) statement -> IDENTIFICADOR ATRIBUICAO . expression PONTO_E_VIRGULA
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
-    expression                     shift and go to state 17
+    expression                     shift and go to state 12
+    function_call                  shift and go to state 17
 
 state 9
 
-    (6) expression -> IDENTIFICADOR .
+    (5) statement -> ESCREVER PARENTESES_ESQ . expression PARENTESES_DIR PONTO_E_VIRGULA
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    PONTO_E_VIRGULA reduce using rule 6 (expression -> IDENTIFICADOR .)
-    OPERADOR_ARITMETICO reduce using rule 6 (expression -> IDENTIFICADOR .)
-    CONCATENACAO    reduce using rule 6 (expression -> IDENTIFICADOR .)
-    PARENTESES_DIR  reduce using rule 6 (expression -> IDENTIFICADOR .)
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
+    expression                     shift and go to state 20
+    function_call                  shift and go to state 17
 
 state 10
 
-    (4) statement -> IDENTIFICADOR ATRIBUICAO expression . PONTO_E_VIRGULA
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
+    (6) statement -> FUNCAO IDENTIFICADOR . PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> FUNCAO IDENTIFICADOR . PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
 
-    PONTO_E_VIRGULA shift and go to state 18
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
+    PARENTESES_ESQ  shift and go to state 21
 
 
 state 11
 
-    (7) expression -> NUMERO .
+    (11) expression -> IDENTIFICADOR .
+    (21) function_call -> IDENTIFICADOR . PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    PONTO_E_VIRGULA reduce using rule 7 (expression -> NUMERO .)
-    OPERADOR_ARITMETICO reduce using rule 7 (expression -> NUMERO .)
-    CONCATENACAO    reduce using rule 7 (expression -> NUMERO .)
-    PARENTESES_DIR  reduce using rule 7 (expression -> NUMERO .)
+    PONTO_E_VIRGULA reduce using rule 11 (expression -> IDENTIFICADOR .)
+    OPERADOR_ARITMETICO reduce using rule 11 (expression -> IDENTIFICADOR .)
+    CONCATENACAO    reduce using rule 11 (expression -> IDENTIFICADOR .)
+    PARENTESES_DIR  reduce using rule 11 (expression -> IDENTIFICADOR .)
+    COMMA           reduce using rule 11 (expression -> IDENTIFICADOR .)
+    PARENTESES_ESQ  shift and go to state 22
 
 
 state 12
 
-    (8) expression -> STRING .
+    (4) statement -> IDENTIFICADOR ATRIBUICAO expression . PONTO_E_VIRGULA
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
 
-    PONTO_E_VIRGULA reduce using rule 8 (expression -> STRING .)
-    OPERADOR_ARITMETICO reduce using rule 8 (expression -> STRING .)
-    CONCATENACAO    reduce using rule 8 (expression -> STRING .)
-    PARENTESES_DIR  reduce using rule 8 (expression -> STRING .)
+    PONTO_E_VIRGULA shift and go to state 23
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
 
 
 state 13
 
-    (9) expression -> INTERPOLATED_STRING .
+    (12) expression -> NUMERO .
 
-    PONTO_E_VIRGULA reduce using rule 9 (expression -> INTERPOLATED_STRING .)
-    OPERADOR_ARITMETICO reduce using rule 9 (expression -> INTERPOLATED_STRING .)
-    CONCATENACAO    reduce using rule 9 (expression -> INTERPOLATED_STRING .)
-    PARENTESES_DIR  reduce using rule 9 (expression -> INTERPOLATED_STRING .)
+    PONTO_E_VIRGULA reduce using rule 12 (expression -> NUMERO .)
+    OPERADOR_ARITMETICO reduce using rule 12 (expression -> NUMERO .)
+    CONCATENACAO    reduce using rule 12 (expression -> NUMERO .)
+    PARENTESES_DIR  reduce using rule 12 (expression -> NUMERO .)
+    COMMA           reduce using rule 12 (expression -> NUMERO .)
 
 
 state 14
 
-    (12) expression -> PARENTESES_ESQ . expression PARENTESES_DIR
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (13) expression -> STRING .
 
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
+    PONTO_E_VIRGULA reduce using rule 13 (expression -> STRING .)
+    OPERADOR_ARITMETICO reduce using rule 13 (expression -> STRING .)
+    CONCATENACAO    reduce using rule 13 (expression -> STRING .)
+    PARENTESES_DIR  reduce using rule 13 (expression -> STRING .)
+    COMMA           reduce using rule 13 (expression -> STRING .)
 
-    expression                     shift and go to state 21
 
 state 15
 
-    (13) expression -> ENTRADA . PARENTESES_ESQ PARENTESES_DIR
+    (14) expression -> INTERPOLATED_STRING .
 
-    PARENTESES_ESQ  shift and go to state 22
+    PONTO_E_VIRGULA reduce using rule 14 (expression -> INTERPOLATED_STRING .)
+    OPERADOR_ARITMETICO reduce using rule 14 (expression -> INTERPOLATED_STRING .)
+    CONCATENACAO    reduce using rule 14 (expression -> INTERPOLATED_STRING .)
+    PARENTESES_DIR  reduce using rule 14 (expression -> INTERPOLATED_STRING .)
+    COMMA           reduce using rule 14 (expression -> INTERPOLATED_STRING .)
 
 
 state 16
 
-    (14) expression -> ALEATORIO . PARENTESES_ESQ expression PARENTESES_DIR
+    (17) expression -> PARENTESES_ESQ . expression PARENTESES_DIR
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    PARENTESES_ESQ  shift and go to state 23
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
+    expression                     shift and go to state 26
+    function_call                  shift and go to state 17
 
 state 17
 
-    (5) statement -> ESCREVER PARENTESES_ESQ expression . PARENTESES_DIR PONTO_E_VIRGULA
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
+    (18) expression -> function_call .
 
-    PARENTESES_DIR  shift and go to state 24
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
+    PONTO_E_VIRGULA reduce using rule 18 (expression -> function_call .)
+    OPERADOR_ARITMETICO reduce using rule 18 (expression -> function_call .)
+    CONCATENACAO    reduce using rule 18 (expression -> function_call .)
+    PARENTESES_DIR  reduce using rule 18 (expression -> function_call .)
+    COMMA           reduce using rule 18 (expression -> function_call .)
 
 
 state 18
+
+    (19) expression -> ENTRADA . PARENTESES_ESQ PARENTESES_DIR
+
+    PARENTESES_ESQ  shift and go to state 27
+
+
+state 19
+
+    (20) expression -> ALEATORIO . PARENTESES_ESQ expression PARENTESES_DIR
+
+    PARENTESES_ESQ  shift and go to state 28
+
+
+state 20
+
+    (5) statement -> ESCREVER PARENTESES_ESQ expression . PARENTESES_DIR PONTO_E_VIRGULA
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+    PARENTESES_DIR  shift and go to state 29
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+
+state 21
+
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ . param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ . param_list PARENTESES_DIR COLON statement_list FIM
+    (8) param_list -> . param_list COMMA IDENTIFICADOR
+    (9) param_list -> . IDENTIFICADOR
+    (10) param_list -> . empty
+    (25) empty -> .
+
+    IDENTIFICADOR   shift and go to state 30
+    PARENTESES_DIR  reduce using rule 25 (empty -> .)
+    COMMA           reduce using rule 25 (empty -> .)
+
+    param_list                     shift and go to state 31
+    empty                          shift and go to state 32
+
+state 22
+
+    (21) function_call -> IDENTIFICADOR PARENTESES_ESQ . arg_list PARENTESES_DIR
+    (22) arg_list -> . arg_list COMMA expression
+    (23) arg_list -> . expression
+    (24) arg_list -> . empty
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (25) empty -> .
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
+
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
+    PARENTESES_DIR  reduce using rule 25 (empty -> .)
+    COMMA           reduce using rule 25 (empty -> .)
+
+    arg_list                       shift and go to state 33
+    expression                     shift and go to state 34
+    empty                          shift and go to state 35
+    function_call                  shift and go to state 17
+
+state 23
 
     (4) statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .
 
     IDENTIFICADOR   reduce using rule 4 (statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .)
     ESCREVER        reduce using rule 4 (statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .)
+    FUNCAO          reduce using rule 4 (statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .)
     $end            reduce using rule 4 (statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .)
+    FIM             reduce using rule 4 (statement -> IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA .)
 
-
-state 19
-
-    (10) expression -> expression OPERADOR_ARITMETICO . expression
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
-
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
-
-    expression                     shift and go to state 25
-
-state 20
-
-    (11) expression -> expression CONCATENACAO . expression
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
-
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
-
-    expression                     shift and go to state 26
-
-state 21
-
-    (12) expression -> PARENTESES_ESQ expression . PARENTESES_DIR
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
-
-    PARENTESES_DIR  shift and go to state 27
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
-
-
-state 22
-
-    (13) expression -> ENTRADA PARENTESES_ESQ . PARENTESES_DIR
-
-    PARENTESES_DIR  shift and go to state 28
-
-
-state 23
-
-    (14) expression -> ALEATORIO PARENTESES_ESQ . expression PARENTESES_DIR
-    (6) expression -> . IDENTIFICADOR
-    (7) expression -> . NUMERO
-    (8) expression -> . STRING
-    (9) expression -> . INTERPOLATED_STRING
-    (10) expression -> . expression OPERADOR_ARITMETICO expression
-    (11) expression -> . expression CONCATENACAO expression
-    (12) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
-    (13) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
-    (14) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
-
-    IDENTIFICADOR   shift and go to state 9
-    NUMERO          shift and go to state 11
-    STRING          shift and go to state 12
-    INTERPOLATED_STRING shift and go to state 13
-    PARENTESES_ESQ  shift and go to state 14
-    ENTRADA         shift and go to state 15
-    ALEATORIO       shift and go to state 16
-
-    expression                     shift and go to state 29
 
 state 24
 
-    (5) statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR . PONTO_E_VIRGULA
+    (15) expression -> expression OPERADOR_ARITMETICO . expression
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    PONTO_E_VIRGULA shift and go to state 30
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
+    expression                     shift and go to state 36
+    function_call                  shift and go to state 17
 
 state 25
 
-    (10) expression -> expression OPERADOR_ARITMETICO expression .
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
+    (16) expression -> expression CONCATENACAO . expression
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-  ! shift/reduce conflict for OPERADOR_ARITMETICO resolved as shift
-  ! shift/reduce conflict for CONCATENACAO resolved as shift
-    PONTO_E_VIRGULA reduce using rule 10 (expression -> expression OPERADOR_ARITMETICO expression .)
-    PARENTESES_DIR  reduce using rule 10 (expression -> expression OPERADOR_ARITMETICO expression .)
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
-  ! OPERADOR_ARITMETICO [ reduce using rule 10 (expression -> expression OPERADOR_ARITMETICO expression .) ]
-  ! CONCATENACAO    [ reduce using rule 10 (expression -> expression OPERADOR_ARITMETICO expression .) ]
-
+    expression                     shift and go to state 37
+    function_call                  shift and go to state 17
 
 state 26
 
-    (11) expression -> expression CONCATENACAO expression .
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
+    (17) expression -> PARENTESES_ESQ expression . PARENTESES_DIR
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
 
-  ! shift/reduce conflict for OPERADOR_ARITMETICO resolved as shift
-  ! shift/reduce conflict for CONCATENACAO resolved as shift
-    PONTO_E_VIRGULA reduce using rule 11 (expression -> expression CONCATENACAO expression .)
-    PARENTESES_DIR  reduce using rule 11 (expression -> expression CONCATENACAO expression .)
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
-
-  ! OPERADOR_ARITMETICO [ reduce using rule 11 (expression -> expression CONCATENACAO expression .) ]
-  ! CONCATENACAO    [ reduce using rule 11 (expression -> expression CONCATENACAO expression .) ]
+    PARENTESES_DIR  shift and go to state 38
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
 
 
 state 27
 
-    (12) expression -> PARENTESES_ESQ expression PARENTESES_DIR .
+    (19) expression -> ENTRADA PARENTESES_ESQ . PARENTESES_DIR
 
-    PONTO_E_VIRGULA reduce using rule 12 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
-    OPERADOR_ARITMETICO reduce using rule 12 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
-    CONCATENACAO    reduce using rule 12 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
-    PARENTESES_DIR  reduce using rule 12 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+    PARENTESES_DIR  shift and go to state 39
 
 
 state 28
 
-    (13) expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .
+    (20) expression -> ALEATORIO PARENTESES_ESQ . expression PARENTESES_DIR
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
 
-    PONTO_E_VIRGULA reduce using rule 13 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
-    OPERADOR_ARITMETICO reduce using rule 13 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
-    CONCATENACAO    reduce using rule 13 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
-    PARENTESES_DIR  reduce using rule 13 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
 
+    expression                     shift and go to state 40
+    function_call                  shift and go to state 17
 
 state 29
 
-    (14) expression -> ALEATORIO PARENTESES_ESQ expression . PARENTESES_DIR
-    (10) expression -> expression . OPERADOR_ARITMETICO expression
-    (11) expression -> expression . CONCATENACAO expression
+    (5) statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR . PONTO_E_VIRGULA
 
-    PARENTESES_DIR  shift and go to state 31
-    OPERADOR_ARITMETICO shift and go to state 19
-    CONCATENACAO    shift and go to state 20
+    PONTO_E_VIRGULA shift and go to state 41
 
 
 state 30
+
+    (9) param_list -> IDENTIFICADOR .
+
+    PARENTESES_DIR  reduce using rule 9 (param_list -> IDENTIFICADOR .)
+    COMMA           reduce using rule 9 (param_list -> IDENTIFICADOR .)
+
+
+state 31
+
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list . PARENTESES_DIR COLON statement FIM
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list . PARENTESES_DIR COLON statement_list FIM
+    (8) param_list -> param_list . COMMA IDENTIFICADOR
+
+    PARENTESES_DIR  shift and go to state 42
+    COMMA           shift and go to state 43
+
+
+state 32
+
+    (10) param_list -> empty .
+
+    PARENTESES_DIR  reduce using rule 10 (param_list -> empty .)
+    COMMA           reduce using rule 10 (param_list -> empty .)
+
+
+state 33
+
+    (21) function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list . PARENTESES_DIR
+    (22) arg_list -> arg_list . COMMA expression
+
+    PARENTESES_DIR  shift and go to state 44
+    COMMA           shift and go to state 45
+
+
+state 34
+
+    (23) arg_list -> expression .
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+    PARENTESES_DIR  reduce using rule 23 (arg_list -> expression .)
+    COMMA           reduce using rule 23 (arg_list -> expression .)
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+
+state 35
+
+    (24) arg_list -> empty .
+
+    PARENTESES_DIR  reduce using rule 24 (arg_list -> empty .)
+    COMMA           reduce using rule 24 (arg_list -> empty .)
+
+
+state 36
+
+    (15) expression -> expression OPERADOR_ARITMETICO expression .
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+  ! shift/reduce conflict for OPERADOR_ARITMETICO resolved as shift
+  ! shift/reduce conflict for CONCATENACAO resolved as shift
+    PONTO_E_VIRGULA reduce using rule 15 (expression -> expression OPERADOR_ARITMETICO expression .)
+    PARENTESES_DIR  reduce using rule 15 (expression -> expression OPERADOR_ARITMETICO expression .)
+    COMMA           reduce using rule 15 (expression -> expression OPERADOR_ARITMETICO expression .)
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+  ! OPERADOR_ARITMETICO [ reduce using rule 15 (expression -> expression OPERADOR_ARITMETICO expression .) ]
+  ! CONCATENACAO    [ reduce using rule 15 (expression -> expression OPERADOR_ARITMETICO expression .) ]
+
+
+state 37
+
+    (16) expression -> expression CONCATENACAO expression .
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+  ! shift/reduce conflict for OPERADOR_ARITMETICO resolved as shift
+  ! shift/reduce conflict for CONCATENACAO resolved as shift
+    PONTO_E_VIRGULA reduce using rule 16 (expression -> expression CONCATENACAO expression .)
+    PARENTESES_DIR  reduce using rule 16 (expression -> expression CONCATENACAO expression .)
+    COMMA           reduce using rule 16 (expression -> expression CONCATENACAO expression .)
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+  ! OPERADOR_ARITMETICO [ reduce using rule 16 (expression -> expression CONCATENACAO expression .) ]
+  ! CONCATENACAO    [ reduce using rule 16 (expression -> expression CONCATENACAO expression .) ]
+
+
+state 38
+
+    (17) expression -> PARENTESES_ESQ expression PARENTESES_DIR .
+
+    PONTO_E_VIRGULA reduce using rule 17 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+    OPERADOR_ARITMETICO reduce using rule 17 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+    CONCATENACAO    reduce using rule 17 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+    PARENTESES_DIR  reduce using rule 17 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+    COMMA           reduce using rule 17 (expression -> PARENTESES_ESQ expression PARENTESES_DIR .)
+
+
+state 39
+
+    (19) expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .
+
+    PONTO_E_VIRGULA reduce using rule 19 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+    OPERADOR_ARITMETICO reduce using rule 19 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+    CONCATENACAO    reduce using rule 19 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+    PARENTESES_DIR  reduce using rule 19 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+    COMMA           reduce using rule 19 (expression -> ENTRADA PARENTESES_ESQ PARENTESES_DIR .)
+
+
+state 40
+
+    (20) expression -> ALEATORIO PARENTESES_ESQ expression . PARENTESES_DIR
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+    PARENTESES_DIR  shift and go to state 46
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+
+state 41
 
     (5) statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .
 
     IDENTIFICADOR   reduce using rule 5 (statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .)
     ESCREVER        reduce using rule 5 (statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .)
+    FUNCAO          reduce using rule 5 (statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .)
     $end            reduce using rule 5 (statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .)
+    FIM             reduce using rule 5 (statement -> ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA .)
 
 
-state 31
+state 42
 
-    (14) expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR . COLON statement FIM
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR . COLON statement_list FIM
 
-    PONTO_E_VIRGULA reduce using rule 14 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
-    OPERADOR_ARITMETICO reduce using rule 14 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
-    CONCATENACAO    reduce using rule 14 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
-    PARENTESES_DIR  reduce using rule 14 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+    COLON           shift and go to state 47
+
+
+state 43
+
+    (8) param_list -> param_list COMMA . IDENTIFICADOR
+
+    IDENTIFICADOR   shift and go to state 48
+
+
+state 44
+
+    (21) function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .
+
+    PONTO_E_VIRGULA reduce using rule 21 (function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .)
+    OPERADOR_ARITMETICO reduce using rule 21 (function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .)
+    CONCATENACAO    reduce using rule 21 (function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .)
+    PARENTESES_DIR  reduce using rule 21 (function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .)
+    COMMA           reduce using rule 21 (function_call -> IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR .)
+
+
+state 45
+
+    (22) arg_list -> arg_list COMMA . expression
+    (11) expression -> . IDENTIFICADOR
+    (12) expression -> . NUMERO
+    (13) expression -> . STRING
+    (14) expression -> . INTERPOLATED_STRING
+    (15) expression -> . expression OPERADOR_ARITMETICO expression
+    (16) expression -> . expression CONCATENACAO expression
+    (17) expression -> . PARENTESES_ESQ expression PARENTESES_DIR
+    (18) expression -> . function_call
+    (19) expression -> . ENTRADA PARENTESES_ESQ PARENTESES_DIR
+    (20) expression -> . ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR
+    (21) function_call -> . IDENTIFICADOR PARENTESES_ESQ arg_list PARENTESES_DIR
+
+    IDENTIFICADOR   shift and go to state 11
+    NUMERO          shift and go to state 13
+    STRING          shift and go to state 14
+    INTERPOLATED_STRING shift and go to state 15
+    PARENTESES_ESQ  shift and go to state 16
+    ENTRADA         shift and go to state 18
+    ALEATORIO       shift and go to state 19
+
+    expression                     shift and go to state 49
+    function_call                  shift and go to state 17
+
+state 46
+
+    (20) expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .
+
+    PONTO_E_VIRGULA reduce using rule 20 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+    OPERADOR_ARITMETICO reduce using rule 20 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+    CONCATENACAO    reduce using rule 20 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+    PARENTESES_DIR  reduce using rule 20 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+    COMMA           reduce using rule 20 (expression -> ALEATORIO PARENTESES_ESQ expression PARENTESES_DIR .)
+
+
+state 47
+
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON . statement FIM
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON . statement_list FIM
+    (4) statement -> . IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA
+    (5) statement -> . ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
+    (6) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
+    (2) statement_list -> . statement_list statement
+    (3) statement_list -> . statement
+
+    IDENTIFICADOR   shift and go to state 4
+    ESCREVER        shift and go to state 5
+    FUNCAO          shift and go to state 6
+
+    statement                      shift and go to state 50
+    statement_list                 shift and go to state 51
+
+state 48
+
+    (8) param_list -> param_list COMMA IDENTIFICADOR .
+
+    PARENTESES_DIR  reduce using rule 8 (param_list -> param_list COMMA IDENTIFICADOR .)
+    COMMA           reduce using rule 8 (param_list -> param_list COMMA IDENTIFICADOR .)
+
+
+state 49
+
+    (22) arg_list -> arg_list COMMA expression .
+    (15) expression -> expression . OPERADOR_ARITMETICO expression
+    (16) expression -> expression . CONCATENACAO expression
+
+    PARENTESES_DIR  reduce using rule 22 (arg_list -> arg_list COMMA expression .)
+    COMMA           reduce using rule 22 (arg_list -> arg_list COMMA expression .)
+    OPERADOR_ARITMETICO shift and go to state 24
+    CONCATENACAO    shift and go to state 25
+
+
+state 50
+
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement . FIM
+    (3) statement_list -> statement .
+
+  ! shift/reduce conflict for FIM resolved as shift
+    FIM             shift and go to state 52
+    IDENTIFICADOR   reduce using rule 3 (statement_list -> statement .)
+    ESCREVER        reduce using rule 3 (statement_list -> statement .)
+    FUNCAO          reduce using rule 3 (statement_list -> statement .)
+
+  ! FIM             [ reduce using rule 3 (statement_list -> statement .) ]
+
+
+state 51
+
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list . FIM
+    (2) statement_list -> statement_list . statement
+    (4) statement -> . IDENTIFICADOR ATRIBUICAO expression PONTO_E_VIRGULA
+    (5) statement -> . ESCREVER PARENTESES_ESQ expression PARENTESES_DIR PONTO_E_VIRGULA
+    (6) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM
+    (7) statement -> . FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM
+
+    FIM             shift and go to state 53
+    IDENTIFICADOR   shift and go to state 4
+    ESCREVER        shift and go to state 5
+    FUNCAO          shift and go to state 6
+
+    statement                      shift and go to state 7
+
+state 52
+
+    (6) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .
+
+    IDENTIFICADOR   reduce using rule 6 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .)
+    ESCREVER        reduce using rule 6 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .)
+    FUNCAO          reduce using rule 6 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .)
+    $end            reduce using rule 6 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .)
+    FIM             reduce using rule 6 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement FIM .)
+
+
+state 53
+
+    (7) statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .
+
+    IDENTIFICADOR   reduce using rule 7 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .)
+    ESCREVER        reduce using rule 7 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .)
+    FUNCAO          reduce using rule 7 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .)
+    $end            reduce using rule 7 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .)
+    FIM             reduce using rule 7 (statement -> FUNCAO IDENTIFICADOR PARENTESES_ESQ param_list PARENTESES_DIR COLON statement_list FIM .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for OPERADOR_ARITMETICO in state 25 resolved as shift
-WARNING: shift/reduce conflict for CONCATENACAO in state 25 resolved as shift
-WARNING: shift/reduce conflict for OPERADOR_ARITMETICO in state 26 resolved as shift
-WARNING: shift/reduce conflict for CONCATENACAO in state 26 resolved as shift
+WARNING: shift/reduce conflict for OPERADOR_ARITMETICO in state 36 resolved as shift
+WARNING: shift/reduce conflict for CONCATENACAO in state 36 resolved as shift
+WARNING: shift/reduce conflict for OPERADOR_ARITMETICO in state 37 resolved as shift
+WARNING: shift/reduce conflict for CONCATENACAO in state 37 resolved as shift
+WARNING: shift/reduce conflict for FIM in state 50 resolved as shift
