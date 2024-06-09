@@ -29,11 +29,11 @@ LexToken(PARENTESES_DIR,')',5,161)
 LexToken(PONTO_E_VIRGULA,';',5,162)
 
 Nós da árvore sintática:
-<ast_nodes.WriteNode object at 0x00000273D658BE30>
-<ast_nodes.WriteNode object at 0x00000273D658BF80>
-<ast_nodes.WriteNode object at 0x00000273D658BFE0>
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x00000273D658BE90>, <ast_nodes.StringNode object at 0x00000273D658BDA0>)
-<ast_nodes.WriteNode object at 0x00000273D658BF50>
+<ast_nodes.WriteNode object at 0x000001B2E57DBD40>
+<ast_nodes.WriteNode object at 0x000001B2E57DBE90>
+<ast_nodes.WriteNode object at 0x000001B2E57DBCE0>
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001B2E57DBFE0>, <ast_nodes.StringNode object at 0x000001B2E57DBCB0>)
+<ast_nodes.WriteNode object at 0x000001B2E57DBF80>
 
 Resultado da última operação:
 OlÃ¡, ESI
