@@ -3,6 +3,7 @@ from ast_nodes import *
 import random
 
 variables = {}  # Dicionário para armazenar variáveis
+functions = {}  # Dicionário para armazenar funções
 
 def eval_program(node):
     result = None
@@ -19,6 +20,11 @@ def eval_statement(node):
         result = eval_expression(node.expression)
         print(result)
         return result  # Retorna o resultado da última operação
+    elif isinstance(node, FunctionNode):
+        functions[node.name] = node
+        return None
+    elif isinstance(node, FunctionCallNode):
+        return eval_function_call(node)
     
 def interpret_line(line, parser):
     try:
@@ -66,9 +72,40 @@ def eval_expression(node):
         return random.randint(0, max_value)  # Gera um número aleatório entre 0 e o valor máximo
     elif isinstance(node, EntradaNode):
         return int(input("Digite um número: "))
+    elif isinstance(node, FunctionCallNode):
+        return eval_function_call(node)
     else:
         raise ValueError(f"Interpreter error: Invalid expression node: {node}")
-    
 
+
+def eval_function_call(node):
+    function = functions.get(node.name)
+    if not function:
+        raise ValueError(f"Função {node.name} não definida")
+    
+    # Cria um novo escopo para as variáveis locais da função
+    local_variables = {}
+    
+    # Mapeia argumentos para parâmetros
+    for param, arg in zip(function.params, node.args):
+        local_variables[param.name] = eval_expression(arg)
+    
+    # Salva o estado atual das variáveis globais
+    global_variables_backup = variables.copy()
+    
+    # Substitui as variáveis globais com as variáveis locais da função
+    variables.update(local_variables)
+    
+    # Executa o corpo da função
+    result = None
+    for statement in function.body:
+        result = eval_statement(statement)
+    
+    # Restaura as variáveis globais
+    variables.clear()
+    variables.update(global_variables_backup)
+    
+    return result
+    
 def interpret(ast):
     return eval_program(ast)
