@@ -72,12 +72,11 @@ def eval_expression(node):
         return random.randint(0, max_value)  # Gera um número aleatório entre 0 e o valor máximo
     elif isinstance(node, EntradaNode):
         return int(input("Digite um número: "))
-    else:
-        raise ValueError(f"Interpreter error: Invalid expression node: {node}")
-    
-
     elif isinstance(node, FunctionCallNode):
         return eval_function_call(node)
+    else:
+        raise ValueError(f"Interpreter error: Invalid expression node: {node}")
+
 
 def eval_function_call(node):
     function = functions.get(node.name)
