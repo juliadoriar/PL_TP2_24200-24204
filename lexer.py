@@ -13,7 +13,7 @@ import ply.lex as lex
 tokens = (
     'IDENTIFICADOR', 'NUMERO', 'OPERADOR_ARITMETICO', 'ATRIBUICAO',
     'PARENTESES_ESQ', 'PARENTESES_DIR', 'PONTO_E_VIRGULA',
-    'ESCREVER', 'STRING', 'CONCATENACAO'
+    'ESCREVER', 'STRING', 'CONCATENACAO', 'FUNCAO', 'FIM'
 )
 
 t_OPERADOR_ARITMETICO = r'\+|\-|\*|\/'
@@ -23,6 +23,8 @@ t_PARENTESES_DIR = r'\)'
 t_PONTO_E_VIRGULA = r';'
 t_CONCATENACAO = r'\<\>'
 t_ESCREVER = r'escrever'
+t_FUNCAO = r'funcao'
+t_FIM = r'fim'
 
 
 
@@ -50,6 +52,8 @@ def t_IDENTIFICADOR(t):
         t.type = 'ENTRADA'
     elif t.value == 'ALEATORIO':
         t.type = 'ALEATORIO'
+    elif t.value == 'FUNCAO':
+        t.type = 'FUNCAO'
     return t
 
 # Expressão regular que reconhece números inteiros.
