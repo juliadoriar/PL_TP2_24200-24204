@@ -1,9 +1,3 @@
-Conteúdo do arquivo de entrada:
-tmp_01 = 2*3+4 ;
-a1_ = 12345 - (5191 * 15) ;
-idade_valida? = 1;
-mult_3! = a1_ * 3 ;
-
 Tokens gerados:
 LexToken(IDENTIFICADOR,'tmp_01',1,0)
 LexToken(ATRIBUICAO,'=',1,7)
@@ -35,9 +29,10 @@ LexToken(NUMERO,3,4,80)
 LexToken(PONTO_E_VIRGULA,';',4,82)
 
 Nós da árvore sintática:
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001758967F440>, <ast_nodes.BinaryOperationNode object at 0x000001758967F590>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001758967F740>, <ast_nodes.BinaryOperationNode object at 0x000001758967F770>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001758967F470>, <ast_nodes.NumberNode object at 0x000001758967F6B0>)
-AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001758967F920>, <ast_nodes.BinaryOperationNode object at 0x000001758967F9B0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001D68424BD70>, <ast_nodes.BinaryOperationNode object at 0x000001D68424BEC0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001D68424BDA0>, <ast_nodes.BinaryOperationNode object at 0x000001D6842680E0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001D684268080>, <ast_nodes.NumberNode object at 0x000001D68424BFE0>)
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x000001D68424BE00>, <ast_nodes.BinaryOperationNode object at 0x000001D684268320>)
 
-Resultado da última operação: -196560
+Resultado da última operação:
+-196560

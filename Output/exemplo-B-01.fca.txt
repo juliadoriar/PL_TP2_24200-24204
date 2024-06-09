@@ -1,0 +1,39 @@
+Tokens gerados:
+LexToken(ESCREVER,'ESCREVER',1,0)
+LexToken(PARENTESES_ESQ,'(',1,8)
+LexToken(IDENTIFICADOR,'valor',1,9)
+LexToken(PARENTESES_DIR,')',1,14)
+LexToken(PONTO_E_VIRGULA,';',1,15)
+LexToken(ESCREVER,'ESCREVER',2,56)
+LexToken(PARENTESES_ESQ,'(',2,64)
+LexToken(NUMERO,365,2,65)
+LexToken(OPERADOR_ARITMETICO,'*',2,69)
+LexToken(NUMERO,2,2,71)
+LexToken(PARENTESES_DIR,')',2,72)
+LexToken(PONTO_E_VIRGULA,';',2,73)
+LexToken(ESCREVER,'ESCREVER',3,82)
+LexToken(PARENTESES_ESQ,'(',3,90)
+LexToken(STRING,'Ola Mundo',3,91)
+LexToken(PARENTESES_DIR,')',3,102)
+LexToken(PONTO_E_VIRGULA,';',3,103)
+LexToken(IDENTIFICADOR,'curso',4,121)
+LexToken(ATRIBUICAO,'=',4,127)
+LexToken(STRING,'ESI',4,129)
+LexToken(PONTO_E_VIRGULA,';',4,134)
+LexToken(ESCREVER,'ESCREVER',5,136)
+LexToken(PARENTESES_ESQ,'(',5,144)
+LexToken(STRING,'OlÃ¡, ',5,145)
+LexToken(CONCATENACAO,'<>',5,153)
+LexToken(IDENTIFICADOR,'curso',5,156)
+LexToken(PARENTESES_DIR,')',5,161)
+LexToken(PONTO_E_VIRGULA,';',5,162)
+
+Nós da árvore sintática:
+<ast_nodes.WriteNode object at 0x00000273D658BE30>
+<ast_nodes.WriteNode object at 0x00000273D658BF80>
+<ast_nodes.WriteNode object at 0x00000273D658BFE0>
+AssignmentNode(<ast_nodes.IdentifierNode object at 0x00000273D658BE90>, <ast_nodes.StringNode object at 0x00000273D658BDA0>)
+<ast_nodes.WriteNode object at 0x00000273D658BF50>
+
+Resultado da última operação:
+OlÃ¡, ESI
