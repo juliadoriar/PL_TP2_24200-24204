@@ -13,7 +13,7 @@ import ply.lex as lex
 tokens = (
     'IDENTIFICADOR', 'NUMERO', 'OPERADOR_ARITMETICO', 'ATRIBUICAO',
     'PARENTESES_ESQ', 'PARENTESES_DIR', 'PONTO_E_VIRGULA',
-    'ESCREVER'
+    'ESCREVER', 'STRING', 'CONCATENACAO'
 )
 
 t_OPERADOR_ARITMETICO = r'\+|\-|\*|\/'
@@ -21,7 +21,9 @@ t_ATRIBUICAO = r'='
 t_PARENTESES_ESQ = r'\('
 t_PARENTESES_DIR = r'\)'
 t_PONTO_E_VIRGULA = r';'
+t_CONCATENACAO = r'\<\>'
 t_ESCREVER = r'escrever'
+
 
 
 # Expressão regular que reconhece espaços em branco e tabulações e os ignora.
@@ -42,6 +44,12 @@ def t_STRING(t):
 # Expressão regular que reconhece identificadores, variaveis, funções , etc.
 def t_IDENTIFICADOR(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*[!?]?' # Definido em enunciado
+    if t.value == 'ESCREVER':
+        t.type = 'ESCREVER'
+    elif t.value == 'ENTRADA':
+        t.type = 'ENTRADA'
+    elif t.value == 'ALEATORIO':
+        t.type = 'ALEATORIO'
     return t
 
 # Expressão regular que reconhece números inteiros.

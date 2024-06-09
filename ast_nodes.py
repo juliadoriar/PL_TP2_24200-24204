@@ -65,3 +65,14 @@ class AleatoryNode:
         # O nó AleatoryNode representa uma expressão que determina o valor máximo para a geração de um número aleatório.
         # Ele armazena a expressão que determina o valor máximo para a aleatoriedade.
         self.expression = expression  # Expressão que determina o valor máximo para a aleatoriedade
+        
+class ConcatNode:
+    def __init__(self, left, right):
+        # O nó ConcatNode representa uma operação de concatenação de strings.
+        # A concatenação é uma operação que combina duas strings em uma única string.
+        self.left = left
+        self.right = right
+
+class StringNode:
+    def __init__(self, value):
+        self.value = value

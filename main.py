@@ -1,64 +1,69 @@
 from lexer import lexer
 from parser_1 import parser
-from interpreter import interpret
+from interpreter import interpret, interpret_line
 import sys
 import os
 
 def main():
-    # Verifica se foi fornecido o nome do arquivo como argumento
-    if len(sys.argv) < 2:
-        print("Por favor, forneça o nome do arquivo de entrada como argumento.")
-        return
-    
-    input_filename = sys.argv[1]
-    output_folder = "Output"
-    output_filename = os.path.join(output_folder, os.path.basename(input_filename))
+    if len(sys.argv) > 1:  # Se um arquivo de entrada foi fornecido como argumento
+        input_filename = sys.argv[1]
+        output_folder = "Output"
+        output_filename = os.path.join(output_folder, os.path.basename(input_filename) + ".txt")
 
-    try:
-        # Abre o arquivo de entrada
-        with open(input_filename, 'r') as input_file:
-            # Lê o conteúdo do arquivo
-            data = input_file.read()
-        
-        # Cria o diretório de saída se ele não existir
-        os.makedirs(output_folder, exist_ok=True)
-
-        # Abre o arquivo de saída para escrever
-        with open(output_filename, 'w') as output_file:
-            # Redireciona a saída padrão para o arquivo de saída
-            sys.stdout = output_file
-
-            # Imprime o conteúdo do arquivo de entrada
-            print("Conteúdo do arquivo de entrada:")
-            print(data)
-
+        try:
+            # Abre o arquivo de entrada
+            with open(input_filename, 'r') as input_file:
+                # Lê o conteúdo do arquivo
+                data = input_file.read()
+            
             # Envia o código fonte para o lexer
             lexer.input(data)
 
-            # Imprime os tokens gerados pelo lexer
-            print("\nTokens gerados:")
+            # Obter os tokens gerados pelo lexer
+            tokens = []
             for token in lexer:
-                print(token)
+                tokens.append(token)
 
             # Chama o parser para construir a árvore sintática
             ast = parser.parse(data, lexer=lexer)
 
-            # Imprime os nós da árvore sintática
-            print("\nNós da árvore sintática:")
-            print(ast)
-
             # Interpreta o AST
             result = interpret(ast)
 
-            # Escreve o resultado no arquivo de saída
-            output_file.write("\nResultado da última operação: " + str(result))
+            # Cria o diretório de saída se ele não existir
+            os.makedirs(output_folder, exist_ok=True)
 
-    except FileNotFoundError:
-        print(f"Arquivo '{input_filename}' não encontrado.")
+            # Abre o arquivo de saída para escrever
+            with open(output_filename, 'w') as output_file:
+                # Escreve os tokens no arquivo de saída
+                output_file.write("Tokens gerados:\n")
+                for token in tokens:
+                    output_file.write(str(token) + "\n")
 
-    finally:
-        # Restaura a saída padrão
-        sys.stdout = sys.__stdout__
+                # Escreve os nós da árvore sintática no arquivo de saída
+                output_file.write("\nNós da árvore sintática:\n")
+                output_file.write(str(ast) + "\n")
+
+                # Escreve o resultado da interpretação no arquivo de saída
+                output_file.write("\nResultado da última operação:\n")
+                output_file.write(str(result))
+
+            print(f"Resultado da última operação foi salvo em '{output_filename}'.")
+
+        except FileNotFoundError:
+            print(f"Arquivo '{input_filename}' não encontrado.")
+        except Exception as e:
+            print(f"Erro ao processar o arquivo: {e}")
+    else:  # Modo interativo
+        print("Modo Interativo. Digite suas instruções:")
+        while True:
+            try:
+                line = input('>>> ')
+                if line.lower() in ['exit', 'quit']:
+                    break
+                interpret_line(line, parser)
+            except Exception as e:
+                print(f"Erro ao processar a entrada: {e}")
 
 if __name__ == "__main__":
     main()

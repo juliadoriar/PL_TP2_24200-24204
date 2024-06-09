@@ -31,19 +31,25 @@ def p_expression(p):
     '''
     expression : IDENTIFICADOR
                | NUMERO
+               | STRING
                | expression OPERADOR_ARITMETICO expression
+               | expression CONCATENACAO expression
                | PARENTESES_ESQ expression PARENTESES_DIR
     '''
     if len(p) == 2:
-        if isinstance(p[1], str):  # Se for um identificador
-            p[0] = IdentifierNode(p[1])  # Criar um nó de identificador
-        else:  # Caso contrário, é um número
-            p[0] = NumberNode(p[1])  # Criar um nó de número
-    elif len(p) == 4:  # Se a expressão estiver entre parênteses
+        if isinstance(p[1], str) and p.slice[1].type == 'IDENTIFICADOR':
+            p[0] = IdentifierNode(p[1])
+        elif isinstance(p[1], int):
+            p[0] = NumberNode(p[1])
+        else:
+            p[0] = StringNode(p[1])
+    elif len(p) == 4:
         if p[1] == '(' and p[3] == ')':
-            p[0] = p[2]  # Ignorar os parênteses e manter a expressão interna
-        else:  # Caso contrário, é uma operação aritmética
-            p[0] = BinaryOperationNode(p[2], p[1], p[3])  # Criar um nó de operação binária
+            p[0] = p[2]
+        elif p.slice[2].type == 'OPERADOR_ARITMETICO':
+            p[0] = BinaryOperationNode(p[2], p[1], p[3])
+        elif p.slice[2].type == 'CONCATENACAO':
+            p[0] = ConcatNode(p[1], p[3])
 
 def p_term(p):
     '''term : term OPERADOR_ARITMETICO factor
